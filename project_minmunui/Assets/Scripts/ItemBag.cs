@@ -3,15 +3,13 @@ using UnityEngine;
 
 public class ItemBag
 {
-    // The maximum number of items that can be held in the bag
     private int capacity;
-
     // The current number of items in the bag
     private int count;
-
-    // A list to hold the items in the bag
     private List<ItemPile> itemPiles;
 
+    public static ItemPile Empty = new ItemPile(Item.Empty, 0);
+    
     // Constructor to initialize the item bag with a given capacity
     public ItemBag(int capacity)
     {
@@ -21,36 +19,62 @@ public class ItemBag
     }
 
     // Method to add an item to the bag
-    public void AddItem(Item item)
+    public ItemPile AddItem(Item item, int amount)
     {
-        if (count < capacity)
+        int remainToAdd = amount;
+        foreach (var itemPile in itemPiles)
         {
-            itemPile.Add(item);
-            count++;
+            if (itemPile.item.ID == item.ID)
+            {
+                remainToAdd = itemPile.AddAmount(amount);
+            }
+            if (remainToAdd == 0)
+            {
+                return Empty;
+            }
         }
-        else
+
+        if (capacity > amount)
         {
-            Debug.Log("Item bag is full!");
+            itemPiles.Add(new ItemPile(item, 0));
+            this.AddItem(item, remainToAdd);
         }
+        
+        Debug.Log($"Bag is overflow! / {item}*{remainToAdd}");
+        return new ItemPile(item, remainToAdd);
+        // if make new itemPile
     }
+
+    public ItemPile AddItem(ItemPile itemPileToAdd)
+    {
+        return AddItem(new ItemPile(itemPileToAdd.item, itemPileToAdd.amount));
+    }
+    
+    
 
     // Method to remove an item from the bag
-    public void RemoveItem(Item item)
+    public void RemoveItem(Item item, int amount)
     {
-        if (items.Contains(item))
+        foreach (var itemPile in itemPiles)
         {
-            items.Remove(item);
-            count--;
+            if (itemPile.item == item)
+            {
+                itemPile.amount -= amount;
+                if (itemPile.amount == 0)
+                {
+                    return;
+                }
+                if (itemPile.amount < 0)
+                {
+                    amount = -itemPile.amount;
+                    itemPiles.Remove(itemPile);
+                }
+            }
         }
-        else
+        if (amount > 0)
         {
-            Debug.Log("Item not found in bag!");
+            Debug.Log($"Bag is underflow! / {item}*{amount}");
         }
-    }
-
-    public bool isInsertable(Item item, int amount)
-    {
-        
     }
     
     // Method to check if the bag is full
@@ -66,8 +90,8 @@ public class ItemBag
     }
 
     // Method to get the list of items in the bag
-    public List<Item> GetItems()
+    public List<ItemPile> GetItems()
     {
-        return items;
+        return itemPiles;
     }
 }
