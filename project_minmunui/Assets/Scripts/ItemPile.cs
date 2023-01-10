@@ -1,8 +1,5 @@
-
 using System;
 using System.Collections.Generic;
-using OpenCover.Framework.Model;
-using UnityEngine;
 
 public class ItemPile : IComparable<ItemPile>
 {
@@ -31,8 +28,9 @@ public class ItemPile : IComparable<ItemPile>
     {
         if (this.amount + amount > this.item.stackMaximum)
         {
+            int remain = amount + this.amount - item.stackMaximum;
             this.amount = this.item.stackMaximum;
-            return amount + this.amount - this.item.stackMaximum;
+            return remain;
         }
         this.amount += amount;
         return 0;
@@ -40,7 +38,7 @@ public class ItemPile : IComparable<ItemPile>
 
     public override string ToString()
     {
-        return $"Item {item}*{amount}";
+        return $"{item}*{amount}";
     }
 
     public int CompareTo(ItemPile other)

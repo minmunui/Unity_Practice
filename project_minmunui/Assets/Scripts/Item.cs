@@ -6,7 +6,6 @@ public class Item : IComparable<Item>
 {
     public string name;
     public int ID;
-    public Sprite sprite;
     public int stackMaximum;
 
     public static Item Empty = new Item("Empty", 0);
@@ -14,7 +13,6 @@ public class Item : IComparable<Item>
     {
         this.name = name;
         this.ID = ID;
-        sprite = Resources.Load<Sprite>("Sprite/" + name);
     }
 
     public int CompareTo(Item other)
@@ -31,14 +29,11 @@ public class Item : IComparable<Item>
 
     public override string ToString()
     {
-        return $"{{name}} * ({ID})";
+        return $"{name}[{ID}]";
     }
 
     public override int GetHashCode()
     {
         return ID;
     }
-
-    
-    
 }

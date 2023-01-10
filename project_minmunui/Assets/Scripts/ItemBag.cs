@@ -1,10 +1,12 @@
 using System.Collections.Generic;
+using System.Diagnostics.Tracing;
 using UnityEngine;
-
 public class ItemBag
 {
     private int capacity;
     // The current number of items in the bag
+    private int ID;
+    private static int IDCount = 1;
     private int count;
     private List<ItemPile> itemPiles;
 
@@ -15,16 +17,20 @@ public class ItemBag
     {
         this.capacity = capacity;
         this.count = 0;
+        this.ID = IDCount;
+        IDCount++;
         this.itemPiles = new List<ItemPile>(capacity);
     }
 
     // Method to add an item to the bag
     public ItemPile AddItem(Item item, int amount)
     {
+        Debug.Log($"Add {item}*{amount} to {this}");
+        
         int remainToAdd = amount;
         foreach (var itemPile in itemPiles)
         {
-            if (itemPile.item.ID == item.ID)
+            if (itemPile.item.ID == item.ID && itemPile.amount < itemPile.item.stackMaximum) 
             {
                 remainToAdd = itemPile.AddAmount(amount);
             }
@@ -34,10 +40,11 @@ public class ItemBag
             }
         }
 
-        if (capacity > amount)
+        if (capacity > count && remainToAdd > 0)
         {
             itemPiles.Add(new ItemPile(item, 0));
-            this.AddItem(item, remainToAdd);
+            this.count++;
+            return AddItem(item, remainToAdd);
         }
         
         Debug.Log($"Bag is overflow! / {item}*{remainToAdd}");
@@ -47,7 +54,8 @@ public class ItemBag
 
     public ItemPile AddItem(ItemPile itemPileToAdd)
     {
-        return AddItem(new ItemPile(itemPileToAdd.item, itemPileToAdd.amount));
+        ItemPile newItemPile = new ItemPile(itemPileToAdd.item, itemPileToAdd.amount);
+        return AddItem(newItemPile.item, newItemPile.amount);
     }
     
     
@@ -60,14 +68,18 @@ public class ItemBag
             if (itemPile.item == item)
             {
                 itemPile.amount -= amount;
-                if (itemPile.amount == 0)
+                if (itemPile.amount > 0)
                 {
                     return;
                 }
                 if (itemPile.amount < 0)
                 {
-                    amount = -itemPile.amount;
-                    itemPiles.Remove(itemPile);
+                    Debug.Log($"Additional Remove Required {item}*{amount} from {this}");
+                    amount = (-1)*itemPile.amount;
+                    itemPiles.Remove(itemPile); // In foreach, element remove is not allowed TODO
+                    Debug.Log($"After Remove\n{this}");
+                    this.count--;
+                    this.RemoveItem(item, amount);
                 }
             }
         }
@@ -93,5 +105,17 @@ public class ItemBag
     public List<ItemPile> GetItems()
     {
         return itemPiles;
+    }
+
+    public override string ToString()
+    {
+        string result = $"capacity : {capacity}, ID : {ID}\n<Contain>\n";
+        foreach (var itemPile in this.itemPiles)
+        {
+            result+= itemPile + "\n";
+        }
+
+        result += "</Contain>";
+        return result;
     }
 }
