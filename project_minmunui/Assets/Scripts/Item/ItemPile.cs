@@ -1,8 +1,10 @@
 using System;
 using System.Collections.Generic;
+using UnityEngine;
 
-public class ItemPile : IComparable<ItemPile>
+public class ItemPile : MonoBehaviour, IComparable<ItemPile>
 {
+    public Rigidbody itemRigidbody;
     public int amount;
     public Item item;
     public static Item testItem = new Item("testItem", 0);
@@ -48,5 +50,29 @@ public class ItemPile : IComparable<ItemPile>
             return this.amount.CompareTo(other);
         }
         return this.item.CompareTo(other.item);
+    }
+    
+    
+    void Start()
+    {
+        itemRigidbody = GetComponent<Rigidbody>();
+    }
+    
+    private void OnDestroy()
+    {
+        Debug.Log($"{this} is destroyed at {transform.position}");
+    }
+    
+    public void LootItem(ItemBag itemBag)
+    {
+        ItemPile remains = itemBag.AddItem(this);
+        if (remains.amount > 0)
+        {
+            ItemPile remainItemObject = new ItemPile(remains.item, remains.amount);
+            Instantiate()
+            ItemManager.instance.DropItem(remainItemObject, transform.position);
+            Debug.Log($"Loot Item {this} to {itemBag}");
+        }
+        
     }
 }

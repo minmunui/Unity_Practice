@@ -12,8 +12,8 @@ public class ItemTest : MonoBehaviour
     {
         testitem = new Item("Test Item", 1);
         testItemPile = new ItemPile(testitem, 10);
-        testItemBag = new ItemBag(10);
-        testitem.stackMaximum = 64;
+        testItemBag = new ItemBag(30);
+        testitem.stackMaximum = 1;
     }
 
     // Update is called once per frame

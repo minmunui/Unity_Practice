@@ -63,23 +63,32 @@ public class ItemBag
     // Method to remove an item from the bag
     public void RemoveItem(Item item, int amount)
     {
-        foreach (var itemPile in itemPiles)
+        for (int i = 0; i < itemPiles.Count; i++)
         {
-            if (itemPile.item == item)
+            if (itemPiles[i].item == item)
             {
-                itemPile.amount -= amount;
-                if (itemPile.amount > 0)
+                itemPiles[i].amount -= amount;
+                if (itemPiles[i].amount > 0)
                 {
                     return;
                 }
-                if (itemPile.amount < 0)
+
+                if (itemPiles[i].amount < 0)
                 {
+                    amount = (-1)*itemPiles[i].amount;
                     Debug.Log($"Additional Remove Required {item}*{amount} from {this}");
-                    amount = (-1)*itemPile.amount;
-                    itemPiles.Remove(itemPile); // In foreach, element remove is not allowed TODO
+                    itemPiles.Remove(itemPiles[i]); // In foreach, element remove is not allowed TODO
                     Debug.Log($"After Remove\n{this}");
                     this.count--;
                     this.RemoveItem(item, amount);
+                    return;
+                }
+
+                if (itemPiles[i].amount == 0)
+                {
+                    itemPiles.Remove(itemPiles[i]);
+                    this.count--;
+                    return;
                 }
             }
         }
