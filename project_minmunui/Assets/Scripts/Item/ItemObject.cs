@@ -1,12 +1,14 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
+using UnityEditor;
 using UnityEngine;
 [Serializable]
 public class ItemObject : MonoBehaviour
 {
     public ItemPile ItemPile;
-
+    public static ItemObjectUI itemObjectUI;
     public int ID;
     public int amount;
 
@@ -15,6 +17,11 @@ public class ItemObject : MonoBehaviour
     public void Start()
     {
         ItemPile = new ItemPile(ID, amount);
+        itemObjectUI = FindObjectOfType<ItemObjectUI>();
+        if (itemObjectUI.gameObject.activeSelf)
+        {
+            itemObjectUI.gameObject.SetActive(false);
+        }
     }
 
     public void Set(int ID, int amount)
@@ -42,6 +49,19 @@ public class ItemObject : MonoBehaviour
     public int GetID()
     {
         return ItemPile.item.ID;
+    }
+    
+    private void OnMouseOver()
+    {
+        itemObjectUI.gameObject.SetActive(true);
+        itemObjectUI.SetItemObjectUI(ItemPile);
+        Vector2 cursorPos = Input.mousePosition;
+        itemObjectUI.transform.position = cursorPos;
+    }
+
+    private void OnMouseExit()
+    {
+        itemObjectUI.gameObject.SetActive(false);
     }
     
     void Update()
