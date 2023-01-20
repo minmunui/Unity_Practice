@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEditor;
+using UnityEditor.UIElements;
 using UnityEngine;
 [Serializable]
 public class ItemObject : MonoBehaviour
@@ -17,7 +18,11 @@ public class ItemObject : MonoBehaviour
     public void Start()
     {
         ItemPile = new ItemPile(ID, amount);
-        itemObjectUI = FindObjectOfType<ItemObjectUI>();
+        gameObject.layer = LayerMask.NameToLayer("ItemObject");
+        if (itemObjectUI == null)
+        {
+            itemObjectUI = FindObjectOfType<ItemObjectUI>();
+        }
         if (itemObjectUI.gameObject.activeSelf)
         {
             itemObjectUI.gameObject.SetActive(false);
@@ -30,38 +35,14 @@ public class ItemObject : MonoBehaviour
         this.ItemPile.item = Item.ItemList[ID];
         this.ItemPile.item.ID = ID;
     }
-
-    public int GetAmount()
-    {
-        return this.ItemPile.amount;
-    }
-
-    public void SetAmount(int amount)
-    {
-        this.ItemPile.amount = amount;
-    }
-
-    public void SetID(int ID)
-    {
-        this.ItemPile.item = Item.ItemList[ID];
-    }
-
-    public int GetID()
-    {
-        return ItemPile.item.ID;
-    }
-    
     private void OnMouseOver()
     {
-        itemObjectUI.gameObject.SetActive(true);
-        itemObjectUI.SetItemObjectUI(ItemPile);
-        Vector2 cursorPos = Input.mousePosition;
-        itemObjectUI.transform.position = cursorPos;
+        itemObjectUI.ShowToolTipWithCursor(this);
     }
 
     private void OnMouseExit()
     {
-        itemObjectUI.gameObject.SetActive(false);
+        itemObjectUI.HideToolTip();
     }
     
     void Update()

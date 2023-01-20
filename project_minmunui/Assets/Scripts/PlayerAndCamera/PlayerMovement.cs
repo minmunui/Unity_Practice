@@ -7,7 +7,7 @@ public class PlayerMovement : MonoBehaviour
 {
     public float speed = 15.0f;
     public Rigidbody playerRigidbody;
-    private const float Diagonal_Normalize_Coef = 1.0f / 1.41f;
+    private const float DiagonalNormalizeCoef = 1.0f / 1.41f;
     void Start()
     {
         playerRigidbody = GetComponent<Rigidbody>();
@@ -23,7 +23,7 @@ public class PlayerMovement : MonoBehaviour
 
         if (direction.magnitude > 1.0f)
         {
-            direction *= Diagonal_Normalize_Coef;
+            direction *= DiagonalNormalizeCoef;
         }
         
 
