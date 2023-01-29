@@ -7,11 +7,12 @@ public class ItemPile : IComparable<ItemPile>
     public int amount;
     public Item item;
     public GameObject itemObject;
-    public static Item testItem = new Item("testItem", 0);
+    
+    public static ItemPile emptyPile= new ItemPile(0, 1);
 
     public ItemPile()
     {
-        item = Item.Empty;
+        item = Item.empty;
         amount = 0;
     }
     
@@ -38,6 +39,13 @@ public class ItemPile : IComparable<ItemPile>
         {
             int remain = amount + this.amount - item.stackMaximum;
             this.amount = this.item.stackMaximum;
+            return remain;
+        }
+
+        if (this.amount - amount < 0)
+        {
+            int remain = this.amount - amount;
+            this.amount = 0;
             return remain;
         }
         this.amount += amount;

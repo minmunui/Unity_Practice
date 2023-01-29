@@ -9,6 +9,7 @@ public class InventoryManager : MonoBehaviour
     public  InventoryWindow inventoryWindow;
     void Start()
     {
+        inventoryWindow.SetItemGrid(5, 5);
     }
 
     // Update is called once per frame

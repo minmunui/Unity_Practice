@@ -10,7 +10,7 @@ public class ItemBag
     private int count;
     private List<ItemPile> itemPiles;
 
-    public static ItemPile Empty = new ItemPile(Item.Empty, 0);
+    public static ItemPile Empty = new ItemPile(Item.empty, 0);
     
     // Constructor to initialize the item bag with a given capacity
     public ItemBag(int capacity)

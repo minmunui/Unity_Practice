@@ -4,15 +4,15 @@ using Unity.VisualScripting;
 using UnityEngine;
 
 [Serializable]
-public class Item : IComparable<Item>
+public class Item : ScriptableObject
 {
     public string name;
     public int ID;
     public int stackMaximum;
     public string description;
     public Sprite sprite;
-    
-    public static Item Empty = new Item("Empty", 0);
+
+    public static Item empty = new Item("Empty", 0);
     public Item(string name, int ID)
     {
         this.name = name;

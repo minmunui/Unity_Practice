@@ -69,7 +69,6 @@ public class ItemLooter : MonoBehaviour
     bool IsBlocked(Vector3 targetPosition) {
         // Create a ray from the player to the target object
         Ray ray = new Ray(transform.position, targetPosition - transform.position);
-
         // Check if the ray hits any obstacles on the obstacleLayer
         if (Physics.Raycast(ray, out RaycastHit hit, Vector3.Distance(transform.position, targetPosition), obstacleLayer)) {
             // If the ray hits an obstacle, the target object is blocked
